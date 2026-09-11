@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>15 Puzzle — Stamp Press</title>
+  
+  <!-- Google Fonts'dan maxsus shriftlarni yuklab olish -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;800&family=Space+Mono:wght@400;700&display=swap">
+  
+  <style>
+    /* ====================================================
+       1. O'ZGARUVCHILAR (CSS Variables)
+    ==================================================== */
+    :root {
+      --ink: #211d18;
+      --paper: #e9e0cc;
+      --paper-dim: #dcd0b4;
+      --charcoal: #1c1a17;
+      --charcoal-2: #262320;
+      --brass: #b8892f;
+      --brass-bright: #d6a94a;
+      --moss: #6f8f6a;
+      --moss-bright: #8fb489;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    /* ====================================================
+       2. SAHIFA HAMDA ASOSIY FON DIZAYNI
+    ==================================================== */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at 20% -10%, #2c2823 0%, transparent 55%),
+        radial-gradient(ellipse at 90% 110%, #26221d 0%, transparent 50%),
+        var(--charcoal);
+      font-family: 'Bitter', Georgia, serif;
+      color: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .press {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      padding: 36px 40px 30px;
+      background: var(--charcoal-2);
+      border-radius: 10px;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.04) inset,
+        0 30px 60px -20px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(255, 255, 255, 0.03);
+      position: relative;
+    }
+
+    .plate-label {
+      letter-spacing: 0.34em;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--brass);
+      opacity: 0.85;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      color: var(--paper);
+    }
+    h1 em {
+      font-style: normal;
+      color: var(--brass-bright);
+    }
+
+    /* ====================================================
+       3. STATISTIKA VA O'YIN MAYDONI (GRID)
+    ==================================================== */
+    .stats {
+      display: flex;
+      gap: 28px;
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      color: rgba(233, 224, 204, 0.65);
+      margin-top: -6px;
+    }
+    .stats b {
+      color: var(--paper);
+      font-size: 15px;
+    }
+
+    .board {
+      width: min(88vw, 380px);
+      height: min(88vw, 380px);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 8px;
+      padding: 10px;
+      background:
+        repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.15) 0 2px, transparent 2px 6px),
+        #14120f;
+      border-radius: 8px;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    /* ====================================================
+       4. PUZZLE TOSHLARI (TILES) DIZAYNI
+    ==================================================== */
+    .tile {
+      position: relative;
+      border-radius: 5px;
+      background: linear-gradient(155deg, var(--paper) 0%, var(--paper-dim) 100%);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bitter', serif;
+      font-weight: 800;
+      font-size: clamp(22px, 6vw, 34px);
+      cursor: pointer;
+      user-select: none;
+      box-shadow:
+        0 3px 0 rgba(0, 0, 0, 0.35),
+        0 6px 10px rgba(0, 0, 0, 0.35),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      transform-origin: center;
+    }
+
+    .tile::before {
+      content: '';
+      position: absolute;
+      inset: 5px;
+      border: 1.5px solid rgba(33, 29, 24, 0.18);
+      border-radius: 3px;
+      pointer-events: none;
+    }
+
+    .tile:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 5px 0 rgba(0, 0, 0, 0.35),
+        0 10px 16px rgba(0, 0, 0, 0.4),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+    }
+
+    .tile:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .tile.empty {
+      background: transparent;
+      box-shadow: none;
+      cursor: default;
+      pointer-events: none;
+    }
+    .tile.empty::before {
+      display: none;
+    }
+
+    /* ====================================================
+       5. TUGMALAR VA G'ALABA OYNASI
+    ==================================================== */
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 2px;
+      width: 100%;
+    }
+
+    button {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 11px 20px;
+      border-radius: 5px;
+      border: 1px solid rgba(233, 224, 204, 0.15);
+      background: rgba(233, 224, 204, 0.04);
+      color: var(--paper);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex: 1;
+    }
+    button:hover {
+      background: rgba(233, 224, 204, 0.09);
+      border-color: rgba(233, 224, 204, 0.3);
+    }
+
+    button.primary {
+      background: var(--brass);
+      color: var(--charcoal);
+      border-color: var(--brass);
+      font-weight: 700;
+    }
+    button.primary:hover {
+      background: var(--brass-bright);
+      border-color: var(--brass-bright);
+    }
+
+    .win-banner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(20, 18, 15, 0.92);
+      border-radius: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 10;
+    }
+    .win-banner.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .win-banner .big {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--moss-bright);
+      letter-spacing: 0.02em;
+    }
+    .win-banner .small {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      color: rgba(233, 224, 204, 0.7);
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- O'yinning asosiy qutisi -->
+  <div class="press">
+    
+    <div class="plate-label">powered by Azadbei</div>
+    
+    <h1>Fifteen <em>Puzzle</em></h1>
+
+    <div class="stats">
+      <div>Yurishlar: <b id="moves">0</b></div>
+      <div>Vaqt: <b id="timer">00:00</b></div>
+    </div>
+
+    <div class="board" id="board">
+      <div class="win-banner" id="winBanner">
+        <div class="big">Yechildi!</div>
+        <div class="small" id="winStats">0 yurish · 00:00</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button id="shuffleBtn" class="primary">Aralashtirish</button>
+      <button id="restartBtn">Qayta boshlash</button>
+    </div>
+
+  </div>
+
+  <script>
+    (function() {
+      const SIZE = 4;
+      const boardEl = document.getElementById('board');
+      const movesEl = document.getElementById('moves');
+      const timerEl = document.getElementById('timer');
+      const winBanner = document.getElementById('winBanner');
+      const winStats = document.getElementById('winStats');
+      const shuffleBtn = document.getElementById('shuffleBtn');
+      const restartBtn = document.getElementById('restartBtn');
+
+      let tiles = [];
+      let moves = 0;
+      let seconds = 0;
+      let timerInterval = null;
+      let running = false;
+      let solvedOnce = false;
+      let tileEls = [];
+
+      function solvedState() {
+        const arr = [];
+        for (let i = 1; i <= 15; i++) arr.push(i);
+        arr.push(0);
+        return arr;
+      }
+
+      function isSolved(arr) {
+        for (let i = 0; i < 15; i++) {
+          if (arr[i] !== i + 1) return false;
+        }
+        return arr[15] === 0;
+      }
+
+      function indexToRC(i) {
+        return [Math.floor(i / SIZE), i % SIZE];
+      }
+
+      function isSolvable(arr) {
+        const nums = arr.filter(v => v !== 0);
+        let inversions = 0;
+        for (let i = 0; i < nums.length; i++) {
+          for (let j = i + 1; j < nums.length; j++) {
+            if (nums[i] > nums[j]) inversions++;
+          }
+        }
+        const emptyIndex = arr.indexOf(0);
+        const emptyRowFromBottom = SIZE - Math.floor(emptyIndex / SIZE);
+        if (emptyRowFromBottom % 2 === 0) {
+          return inversions % 2 === 1;
+        } else {
+          return inversions % 2 === 0;
+        }
+      }
+
+      function shuffle(arr) {
+        let a = arr.slice();
+        do {
+          for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+          }
+        } while (!isSolvable(a) || isSolved(a));
+        return a;
+      }
+
+      function buildBoard() {
+        boardEl.querySelectorAll('.tile').forEach(t => t.remove());
+        tileEls = [];
+        
+        tiles.forEach((val, i) => {
+          const div = document.createElement('div');
+          div.className = 'tile' + (val === 0 ? ' empty' : '');
+          div.textContent = val === 0 ? '' : val;
+          div.dataset.index = i;
+          
+          if (val !== 0) {
+            div.addEventListener('click', () => attemptMove(i));
+          }
+          
+          boardEl.appendChild(div);
+          tileEls.push(div);
+        });
+      }
+
+      function render() {
+        tiles.forEach((val, i) => {
+          const el = tileEls[i];
+          el.textContent = val === 0 ? '' : val;
+          el.className = 'tile' + (val === 0 ? ' empty' : '');
+        });
+      }
+
+      function attemptMove(i) {
+        if (!running && solvedOnce) return;
+        
+        const emptyIndex = tiles.indexOf(0);
+        const [er, ec] = indexToRC(emptyIndex);
+        const [tr, tc] = indexToRC(i);
+        
+        const adjacent = (Math.abs(er - tr) + Math.abs(ec - tc)) === 1;
+        if (!adjacent) return;
+
+        if (!running) {
+          startTimer();
+        }
+
+        [tiles[emptyIndex], tiles[i]] = [tiles[i], tiles[emptyIndex]];
+        moves++;
+        movesEl.textContent = moves;
+        render();
+
+        if (isSolved(tiles)) {
+          finishGame();
+        }
+      }
+
+      function startTimer() {
+        running = true;
+        seconds = 0;
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+          seconds++;
+          updateTimerDisplay();
+        }, 1000);
+      }
+
+      function stopTimer() {
+        running = false;
+        clearInterval(timerInterval);
+      }
+
+      function updateTimerDisplay() {
+        const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const s = String(seconds % 60).padStart(2, '0');
+        timerEl.textContent = `${m}:${s}`;
+      }
+
+      function finishGame() {
+        stopTimer();
+        solvedOnce = true;
+        winStats.textContent = `${moves} yurish · ${timerEl.textContent}`;
+        winBanner.classList.add('show');
+      }
+
+      function newGame() {
+        stopTimer();
+        solvedOnce = false;
+        moves = 0;
+        seconds = 0;
+        movesEl.textContent = '0';
+        updateTimerDisplay();
+        winBanner.classList.remove('show');
+        
+        tiles = shuffle(solvedState());
+        buildBoard();
+      }
+
+      shuffleBtn.addEventListener('click', newGame);
+      restartBtn.addEventListener('click', newGame);
+
+      document.addEventListener('keydown', (e) => {
+        if (solvedOnce) return;
+        const emptyIndex = tiles.indexOf(0);
+        const [er, ec] = indexToRC(emptyIndex);
+        let target = null;
+        
+        if (e.key === 'ArrowUp') { target = [er + 1, ec]; }
+        else if (e.key === 'ArrowDown') { target = [er - 1, ec]; }
+        else if (e.key === 'ArrowLeft') { target = [er, ec + 1]; }
+        else if (e.key === 'ArrowRight') { target = [er, ec - 1]; }
+        
+        if (target) {
+          const [tr, tc] = target;
+          if (tr >= 0 && tr < SIZE && tc >= 0 && tc < SIZE) {
+            attemptMove(tr * SIZE + tc);
+            e.preventDefault();
+          }
+        }
+      });
+
+      tiles = shuffle(solvedState());
+      buildBoard();
+    })();
+  </script>
+</body>
+</html>

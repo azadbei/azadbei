@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil — Azadbei</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --panel: rgba(17, 24, 39, 0.9);
+        --card: rgba(15, 23, 42, 0.9);
+        --muted: #94a3b8;
+        --text: #e2e8f0;
+        --primary: #f97316;
+        --border: rgba(148, 163, 184, 0.2);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #0b1020 0%, #111827 35%, #1f2937 100%);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* --- HEADER --- */
+      .topbar {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(11, 16, 32, 0.85);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 20px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 18px;
+        color: #fff;
+        letter-spacing: -0.02em;
+        font-family: 'Space Grotesk', Arial, sans-serif;
+      }
+
+      .brand .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        background: var(--primary);
+        transform: rotate(45deg);
+      }
+
+      .badge {
+        padding: 5px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(249, 115, 22, 0.3);
+        background: rgba(249, 115, 22, 0.12);
+        color: #ffedd5;
+        font-size: 0.7rem;
+        font-weight: 700;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px 16px 50px;
+        flex: 1;
+        width: 100%;
+      }
+
+      /* --- PROFILE CARD --- */
+      .profile-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        margin-bottom: 20px;
+      }
+
+      .profile-avatar {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 16px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, var(--primary), #ea580c);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3);
+      }
+
+      .profile-avatar svg {
+        width: 40px;
+        height: 40px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .profile-card h1 {
+        margin: 0 0 6px;
+        font-size: 1.6rem;
+      }
+
+      .profile-card p {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin: 0 0 20px;
+      }
+
+      .profile-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        border-top: 1px solid var(--border);
+        padding-top: 20px;
+      }
+
+      .stat-box {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 12px;
+        border-radius: 12px;
+      }
+
+      .stat-box strong {
+        display: block;
+        font-size: 1.2rem;
+        color: var(--primary);
+      }
+
+      .stat-box span {
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+
+      /* --- INFO SECTIONS --- */
+      .info-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 20px 24px;
+        margin-bottom: 16px;
+      }
+
+      .info-section h3 {
+        margin: 0 0 12px;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .info-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .info-item {
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 0.9rem;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .info-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      .info-item span:last-child {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      .info-item a {
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      .info-item a:hover {
+        text-decoration: underline;
+      }
+
+      /* --- FOOTER --- */
+      footer {
+        width: 100%;
+        background: rgba(11, 16, 32, 0.98);
+        border-top: 1px solid var(--border);
+        padding: 10px 16px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+        margin-top: auto;
+        position: sticky;
+        bottom: 0;
+        z-index: 100;
+      }
+
+      .footer-nav {
+        max-width: 300px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: var(--muted);
+        gap: 2px;
+        transition: color 0.2s ease;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: inherit;
+        padding: 0;
+      }
+
+      .nav-item svg {
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .nav-item span {
+        font-size: 0.65rem;
+        font-weight: 600;
+      }
+
+      .nav-item.active, .nav-item:hover {
+        color: var(--primary);
+      }
+
+      /* --- MODALLAR --- */
+      .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.75);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(6px);
+        padding: 16px;
+      }
+
+      .modal-content {
+        background: #111827;
+        padding: 24px;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 440px;
+        color: white;
+        position: relative;
+        border: 1px solid var(--border);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        text-align: center;
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 12px; right: 16px;
+        font-size: 26px;
+        cursor: pointer;
+        color: var(--muted);
+      }
+
+      .modal-title {
+        font-size: 1.3rem;
+        margin: 0 0 6px;
+      }
+
+      .modal-desc {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-bottom: 18px;
+        line-height: 1.4;
+      }
+
+      .launch-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, var(--primary), #ea580c);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btn-icon-svg {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* --- BANK KARTA DIZAYNI --- */
+      .credit-card {
+        background: linear-gradient(135deg, #1e293b, #0f172a);
+        border: 1px solid rgba(249, 115, 22, 0.4);
+        border-radius: 16px;
+        padding: 20px;
+        margin: 16px 0;
+        text-align: left;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      }
+      .card-icon-svg {
+        width: 32px;
+        height: 32px;
+        stroke: var(--primary);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        margin-bottom: 12px;
+      }
+      .card-number {
+        font-family: 'Space Mono', monospace;
+        font-size: 1.25rem;
+        letter-spacing: 0.12em;
+        color: #ffedd5;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+
+      @media (max-width: 600px) {
+        .profile-stats {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="topbar">
+      <div class="brand"><span class="dot"></span> azadbei.dev</div>
+      <div class="badge">Azadbei</div>
+    </header>
+
+    <div class="container">
+      <!-- Profil Asosiy Kartasi -->
+      <div class="profile-card">
+        <div class="profile-avatar">
+          <svg viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <h1>Azadbei Jumanazarov</h1>
+        <p>Frontend Developer · Alfraganus universiteti (2-kurs)</p>
+        
+        <div class="profile-stats">
+          <div class="stat-box">
+            <strong>4 yil</strong>
+            <span>Tajriba</span>
+          </div>
+          <div class="stat-box">
+            <strong>3+</strong>
+            <span>O'yinlar</span>
+          </div>
+          <div class="stat-box">
+            <strong>100%</strong>
+            <span>Ishtiyoq</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Batafsil Ma'lumot -->
+      <div class="info-section">
+        <h3>Ma'lumotlar</h3>
+        <ul class="info-list">
+          <li class="info-item">
+            <span>Mutaxassislik:</span>
+            <span>Frontend & Web Games Developer</span>
+          </li>
+          <li class="info-item">
+            <span>Asosiy tillar:</span>
+            <span>HTML, CSS, JavaScript</span>
+          </li>
+          <li class="info-item">
+            <span>O'qish joyi:</span>
+            <span>Alfraganus universiteti</span>
+          </li>
+          <li class="info-item">
+            <span>Telefon:</span>
+            <a href="tel:+998990122605">+998 99 012 26 05</a>
+          </li>
+          <li class="info-item">
+            <span>Telegram:</span>
+            <a href="https://t.me/azadbei" target="_blank" rel="noopener">@azadbei</a>
+          </li>
+          <li class="info-item">
+            <span>Instagram:</span>
+            <a href="https://instagram.com/azadbei" target="_blank" rel="noopener">@azadbei</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer Navigatsiya -->
+    <footer>
+      <nav class="footer-nav">
+        <a href="index.html" class="nav-item">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span>Home</span>
+        </a>
+        <button class="nav-item" onclick="openCardModal()">
+          <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+          <span>Card</span>
+        </button>
+        <a href="profile.html" class="nav-item active">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span>Profile</span>
+        </a>
+      </nav>
+    </footer>
+
+    <!-- Karta raqami chiqadigan Modal -->
+    <div id="cardModal" class="modal-overlay">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeCardModal()">&times;</span>
+        <h2 class="modal-title">
+          <svg style="display:inline-block; vertical-align:middle; width:22px; height:22px; stroke:var(--primary); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; margin-right:6px;" viewBox="0 0 24 24">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+          Mening Karta Raqamim
+        </h2>
+        <p class="modal-desc">Quyidagi karta raqami orqali qo'llab-quvvatlashingiz mumkin:</p>
+        
+        <div class="credit-card">
+          <svg class="card-icon-svg" viewBox="0 0 24 24">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+          
+          <div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 4px;">HUMO</div>
+          <div class="card-number">9860 0101 2799 1684</div>
+        </div>
+
+        <button class="launch-btn" onclick="copyCardNumber()">
+          <svg class="btn-icon-svg" viewBox="0 0 24 24">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Nusxalash
+        </button>
+      </div>
+    </div>
+
+    <script>
+      function openCardModal() {
+        document.getElementById('cardModal').style.display = 'flex';
+      }
+
+      function closeCardModal() {
+        document.getElementById('cardModal').style.display = 'none';
+      }
+
+      function copyCardNumber() {
+        const cardNumber = "9860010127991684";
+        navigator.clipboard.writeText(cardNumber).then(() => {
+          alert("Karta raqami nusxalandi!");
+        });
+      }
+    </script>
+  </body>
+</html>

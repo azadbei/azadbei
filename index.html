@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Games Portfolio</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --panel: rgba(17, 24, 39, 0.9);
+        --card: rgba(15, 23, 42, 0.9);
+        --muted: #94a3b8;
+        --text: #e2e8f0;
+        --primary: #f97316;
+        --border: rgba(148, 163, 184, 0.2);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #0b1020 0%, #111827 35%, #1f2937 100%);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* --- HEADER --- */
+      .topbar {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(11, 16, 32, 0.85);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 20px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 18px;
+        color: #fff;
+        letter-spacing: -0.02em;
+        font-family: 'Space Grotesk', Arial, sans-serif;
+      }
+
+      .brand .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        background: var(--primary);
+        transform: rotate(45deg);
+      }
+
+      .badge {
+        padding: 5px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(249, 115, 22, 0.3);
+        background: rgba(249, 115, 22, 0.12);
+        color: #ffedd5;
+        font-size: 0.7rem;
+        font-weight: 700;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 16px 40px;
+        flex: 1;
+        width: 100%;
+      }
+
+      /* --- HERO QISMI --- */
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 20px;
+        margin-bottom: 30px;
+        align-items: stretch;
+      }
+
+      .hero-card, .spotlight-card {
+        background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      }
+
+      .hero-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .hero-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--primary), #3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+
+      .hero-avatar svg {
+        width: 22px;
+        height: 22px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .hero-title-group h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+      }
+
+      .hero-title-group span {
+        font-size: 0.8rem;
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .hero-desc {
+        margin: 0 0 20px;
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.5;
+      }
+
+      .mini-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        border-top: 1px solid var(--border);
+        padding-top: 16px;
+      }
+
+      .mini-stat {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 10px;
+        border-radius: 12px;
+        text-align: center;
+      }
+
+      .portfolio-link-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 10px;
+        border-radius: 12px;
+        text-align: center;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .portfolio-link-card:hover {
+        background: rgba(249, 115, 22, 0.1);
+        border-color: rgba(249, 115, 22, 0.4);
+        transform: translateY(-2px);
+      }
+
+      .portfolio-link-card strong {
+        display: block;
+        font-size: 1rem;
+        color: var(--primary);
+        margin-bottom: 2px;
+      }
+
+      .portfolio-link-card span {
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+
+      /* --- SPOTLIGHT --- */
+      .spotlight-card {
+        background: linear-gradient(135deg, rgba(249, 115, 22, 0.12), rgba(15, 23, 42, 0.95));
+        border: 1px solid rgba(249, 115, 22, 0.3);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .spotlight-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .spotlight-tag {
+        background: rgba(249, 115, 22, 0.2);
+        color: #ffedd5;
+        padding: 3px 8px;
+        border-radius: 99px;
+        font-size: 0.7rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .spotlight-body {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .spotlight-img {
+        width: 70px;
+        height: 70px;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+
+      .spotlight-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .spotlight-info h3 {
+        margin: 0 0 4px;
+        font-size: 1.15rem;
+      }
+
+      .spotlight-info p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.85rem;
+        line-height: 1.4;
+      }
+
+      .spotlight-btn {
+        margin-top: 14px;
+        width: 100%;
+        padding: 10px;
+        background: linear-gradient(135deg, var(--primary), #ea580c);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: opacity 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .games-header {
+        margin: 20px 0 12px;
+      }
+
+      .games-header h2 {
+        margin: 0;
+        font-size: 1.3rem;
+      }
+
+      /* --- O'YINLAR GRID --- */
+      .games-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .game-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 16px;
+        cursor: pointer;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+      }
+
+      .game-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(249, 115, 22, 0.5);
+      }
+
+      .game-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(249, 115, 22, 0.25), rgba(56, 189, 248, 0.25));
+        font-size: 1.4rem;
+        margin-bottom: 12px;
+        overflow: hidden;
+      }
+
+      .game-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .game-card h3 {
+        margin: 0 0 6px;
+        font-size: 1.05rem;
+      }
+
+      .game-card p {
+        margin: 0 0 12px;
+        color: var(--muted);
+        font-size: 0.85rem;
+        line-height: 1.5;
+        min-height: 40px;
+      }
+
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        font-size: 0.75rem;
+      }
+
+      .tag {
+        display: inline-block;
+        padding: 3px 6px;
+        border-radius: 999px;
+        border: 1px solid rgba(34, 197, 94, 0.35);
+        background: rgba(34, 197, 94, 0.08);
+        color: #bbf7d0;
+      }
+
+      /* --- FOOTER --- */
+      footer {
+        width: 100%;
+        background: rgba(11, 16, 32, 0.98);
+        border-top: 1px solid var(--border);
+        padding: 10px 16px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+        margin-top: auto;
+        position: sticky;
+        bottom: 0;
+        z-index: 100;
+      }
+
+      .footer-nav {
+        max-width: 300px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: var(--muted);
+        gap: 2px;
+        transition: color 0.2s ease;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: inherit;
+        padding: 0;
+      }
+
+      .nav-item svg {
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .nav-item span {
+        font-size: 0.65rem;
+        font-weight: 600;
+      }
+
+      .nav-item.active, .nav-item:hover {
+        color: var(--primary);
+      }
+
+      /* --- MODALLAR --- */
+      .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.75);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(6px);
+        padding: 16px;
+      }
+
+      .modal-content {
+        background: #111827;
+        padding: 24px;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 440px;
+        color: white;
+        position: relative;
+        border: 1px solid var(--border);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        text-align: center;
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 12px; right: 16px;
+        font-size: 26px;
+        cursor: pointer;
+        color: var(--muted);
+      }
+
+      .modal-logo {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 10px;
+        border-radius: 14px;
+        overflow: hidden;
+        background: rgba(255,255,255,0.05);
+      }
+
+      .modal-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .modal-title {
+        font-size: 1.3rem;
+        margin: 0 0 6px;
+      }
+
+      .modal-date {
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .modal-date-icon {
+        width: 15px;
+        height: 15px;
+        stroke: var(--muted);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .modal-tech {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 14px;
+      }
+
+      .modal-desc {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-bottom: 18px;
+        line-height: 1.4;
+      }
+
+      .launch-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, var(--primary), #ea580c);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btn-icon-svg {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* --- BANK KARTA DIZAYNI --- */
+      .credit-card {
+        background: linear-gradient(135deg, #1e293b, #0f172a);
+        border: 1px solid rgba(249, 115, 22, 0.4);
+        border-radius: 16px;
+        padding: 20px;
+        margin: 16px 0;
+        text-align: left;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      }
+      .card-icon-svg {
+        width: 32px;
+        height: 32px;
+        stroke: var(--primary);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        margin-bottom: 12px;
+      }
+      .card-number {
+        font-family: 'Space Mono', monospace;
+        font-size: 1.25rem;
+        letter-spacing: 0.12em;
+        color: #ffedd5;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+
+      /* --- O'YIN MODALI --- */
+      .game-modal-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        backdrop-filter: blur(10px);
+        padding: 10px;
+      }
+
+      .game-modal-content {
+        background: #111827;
+        border-radius: 18px;
+        width: 100%;
+        max-width: 500px;
+        height: 98vh;
+        max-height: 820px;
+        position: relative;
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .game-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 16px;
+        background: rgba(15, 23, 42, 0.95);
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+
+      .game-modal-title {
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .game-modal-close {
+        background: none;
+        border: none;
+        font-size: 22px;
+        cursor: pointer;
+        color: var(--muted);
+      }
+
+      .game-modal-content iframe {
+        width: 100%;
+        height: 100%;
+        flex: 1;
+        border: none;
+        background: #000;
+      }
+
+      @media (max-width: 768px) {
+        .hero {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .games-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+        .container {
+          padding: 12px 10px 30px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="topbar">
+      <div class="brand"><span class="dot"></span> azadbei.dev</div>
+      <div class="badge">Azadbei</div>
+    </header>
+
+    <div class="container">
+      <section class="hero">
+        <!-- Chap Qism -->
+        <div class="hero-card">
+          <div>
+            <div class="hero-top">
+              <div class="hero-avatar">
+                <svg viewBox="0 0 24 24">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <div class="hero-title-group">
+                <h1>My Portfolio</h1>
+                <span>Web Developer</span>
+              </div>
+            </div>
+            <p class="hero-desc">
+              "Shaxsiy o'yinlar portfolio sahifamga xush kelibsiz. Eng qiziqarli loyihalarimni kashf eting!"
+            </p>
+          </div>
+          <div class="mini-stats">
+            <div class="mini-stat">
+              <strong>3+</strong>
+              <span>O'yinlar</span>
+            </div>
+            <!-- Profilga yo'naltiruvchi havola -->
+            <a href="profile.html" class="portfolio-link-card">
+              <strong>Profil ↗</strong>
+              <span>Ma'lumotlarim</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- O'ng Qism (Spotlight) -->
+        <div class="spotlight-card">
+          <div class="spotlight-header">
+            <span class="spotlight-tag">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Tavsiya etilgan
+            </span>
+            <span style="font-size: 0.75rem; color: var(--muted);">Top o'yin</span>
+          </div>
+          <div class="spotlight-body">
+            <div class="spotlight-img">
+              <img src="./MemoFruitLogo.jpg" alt="MemoFruit" onerror="this.src='https://via.placeholder.com/70'" />
+            </div>
+            <div class="spotlight-info">
+              <h3>MemoFruit</h3>
+              <p>Klassik va qiziqarli xotira o'yini.</p>
+            </div>
+          </div>
+          <button class="spotlight-btn" onclick="openModal(0)">
+            <svg class="btn-icon-svg" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            O'ynash
+          </button>
+        </div>
+      </section>
+
+      <div class="games-header" id="games">
+        <h2>Mening o'yinlarim</h2>
+      </div>
+
+      <section class="games-grid" id="gameList"></section>
+    </div>
+
+    <!-- Footer Navigatsiya -->
+    <footer>
+      <nav class="footer-nav">
+        <a href="#" class="nav-item active">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span>Home</span>
+        </a>
+        <button class="nav-item" onclick="openCardModal()">
+          <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+          <span>Card</span>
+        </button>
+        <a href="profile.html" class="nav-item">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span>Profile</span>
+        </a>
+      </nav>
+    </footer>
+
+    <!-- Karta raqami chiqadigan Modal -->
+    <div id="cardModal" class="modal-overlay">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeCardModal()">&times;</span>
+        <h2 class="modal-title">
+          <svg style="display:inline-block; vertical-align:middle; width:22px; height:22px; stroke:var(--primary); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; margin-right:6px;" viewBox="0 0 24 24">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+          Mening Karta Raqamim
+        </h2>
+        
+        <div class="credit-card">
+          <svg class="card-icon-svg" viewBox="0 0 24 24">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+          
+          <div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 4px;">HUMO</div>
+          <div class="card-number">9860 0101 2799 1684</div>
+        </div>
+
+        <button class="launch-btn" onclick="copyCardNumber()">
+          <svg class="btn-icon-svg" viewBox="0 0 24 24">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Nusxalash
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal 1 (O'yin haqida) -->
+    <div id="gameModal" class="modal-overlay">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <div class="modal-logo" id="modalIconContainer">
+          <img id="modalIcon" src="" alt="Logo" />
+        </div>
+        <h2 class="modal-title" id="modalTitle">O'yin Nomi</h2>
+        
+        <div class="modal-date" id="modalDate">
+          <svg class="modal-date-icon" viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>Yaratilgan: 11.09.2026</span>
+        </div>
+
+        <div class="modal-tech">
+          <span class="tag">HTML</span>
+          <span class="tag">CSS</span>
+          <span class="tag">JavaScript</span>
+        </div>
+        <p class="modal-desc" id="modalDesc">Tavsif...</p>
+        <button class="launch-btn" id="launchBtn">
+          <svg class="btn-icon-svg" viewBox="0 0 24 24">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          O'ynashni boshlash
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal 2 (O'yin oynasi) -->
+    <div id="gamePlayModal" class="game-modal-overlay">
+      <div class="game-modal-content">
+        <div class="game-modal-header">
+          <h3 class="game-modal-title" id="gameModalTitle">O'yin</h3>
+          <button class="game-modal-close" onclick="closeGamePlayModal()">&times;</button>
+        </div>
+        <iframe id="gameIframe" src="" frameborder="0" scrolling="no" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <script>
+      const defaultGames = [
+        {
+          title: 'MemoFruit',
+          url: 'memofruit.html',
+          description: 'Klassik ilon va xotira oʻyini.',
+          icon: './MemoFruitLogo.jpg',
+          date: '10.05.2026'
+        },
+        {
+          title: 'Rangli Topishmoq',
+          url: 'rangindex.html',
+          description: 'Ranglar va diqqatni jamlash oʻyini.',
+          icon: './rang.jpg',
+          date: '11.06.2026'
+        },
+        {
+          title: '15 Puzzle',
+          url: 'FifteenPuzzle.html',
+          description: 'Mantiqiy raqamlar boshqotirmasi.',
+          icon: './puzzle.jpg',
+          date: '20.07.2026'
+        }
+      ];
+
+      const gameList = document.getElementById('gameList');
+      let activeGameUrl = '';
+      let activeGameTitle = '';
+
+      function renderGames() {
+        gameList.innerHTML = defaultGames
+          .map(
+            (game, index) => `
+              <article class="game-card" onclick="openModal(${index})">
+                <div class="game-icon">
+                  <img src="${game.icon}" alt="${game.title}" onerror="this.src='https://via.placeholder.com/40'" />
+                </div>
+                <h3>${game.title}</h3>
+                <p>${game.description}</p>
+                <div class="tag-row">
+                  <span class="tag">HTML</span>
+                  <span class="tag">CSS</span>
+                  <span class="tag">JS</span>
+                </div>
+              </article>
+            `
+          )
+          .join('');
+      }
+
+      function openModal(index) {
+        const game = defaultGames[index];
+        activeGameUrl = game.url;
+        activeGameTitle = game.title;
+
+        document.getElementById('modalTitle').textContent = game.title;
+        document.getElementById('modalIcon').src = game.icon;
+        
+        document.getElementById('modalDate').innerHTML = `
+          <svg class="modal-date-icon" viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>Yaratilgan: ${game.date}</span>
+        `;
+        
+        document.getElementById('modalDesc').textContent = game.description;
+
+        document.getElementById('gameModal').style.display = 'flex';
+      }
+
+      function closeModal() {
+        document.getElementById('gameModal').style.display = 'none';
+      }
+
+      function closeGamePlayModal() {
+        document.getElementById('gamePlayModal').style.display = 'none';
+        document.getElementById('gameIframe').src = '';
+      }
+
+      function openCardModal() {
+        document.getElementById('cardModal').style.display = 'flex';
+      }
+
+      function closeCardModal() {
+        document.getElementById('cardModal').style.display = 'none';
+      }
+
+      function copyCardNumber() {
+        const cardNumber = "9860010127991684";
+        navigator.clipboard.writeText(cardNumber).then(() => {
+          alert("Karta raqami nusxalandi!");
+        });
+      }
+
+      document.getElementById('launchBtn').addEventListener('click', function() {
+        if (!activeGameUrl) {
+          alert("Iltimos, o'yin havolasini kiriting!");
+          return;
+        }
+        closeModal();
+        
+        const gamePlayModal = document.getElementById('gamePlayModal');
+        const gameIframe = document.getElementById('gameIframe');
+        document.getElementById('gameModalTitle').textContent = activeGameTitle;
+        gameIframe.src = activeGameUrl;
+        gamePlayModal.style.display = 'flex';
+      });
+
+      renderGames();
+    </script>
+  </body>
+</html>
