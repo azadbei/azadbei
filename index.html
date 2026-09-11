@@ -464,6 +464,12 @@
       .modal-title {
         font-size: 1.3rem;
         margin: 0 0 6px;
+        cursor: pointer;
+        user-select: none;
+      }
+      
+      .modal-title:hover {
+        color: var(--primary);
       }
 
       .modal-date {
@@ -535,7 +541,13 @@
         margin: 16px 0;
         text-align: left;
         box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        cursor: pointer;
+        transition: border-color 0.2s;
       }
+      .credit-card:hover {
+        border-color: var(--primary);
+      }
+
       .card-icon-svg {
         width: 32px;
         height: 32px;
@@ -663,7 +675,6 @@
               <strong>3+</strong>
               <span>O'yinlar</span>
             </div>
-            <!-- Profilga yo'naltiruvchi havola -->
             <a href="profile.html" class="portfolio-link-card">
               <strong>Profil ↗</strong>
               <span>Ma'lumotlarim</span>
@@ -722,18 +733,19 @@
     </footer>
 
     <!-- Karta raqami chiqadigan Modal -->
-    <div id="cardModal" class="modal-overlay">
+    <div id="cardModal" class="modal-overlay" onclick="closeCardModalOnOutside(event, 'cardModal')">
       <div class="modal-content">
         <span class="close-btn" onclick="closeCardModal()">&times;</span>
-        <h2 class="modal-title">
+        <h2 class="modal-title" onclick="copyCardNumber()" title="Bosib nusxalash">
           <svg style="display:inline-block; vertical-align:middle; width:22px; height:22px; stroke:var(--primary); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; margin-right:6px;" viewBox="0 0 24 24">
             <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
             <line x1="1" y1="10" x2="23" y2="10"></line>
           </svg>
           Mening Karta Raqamim
         </h2>
+        <p class="modal-desc">Quyidagi karta raqami orqali qo'llab-quvvatlashingiz mumkin:</p>
         
-        <div class="credit-card">
+        <div class="credit-card" onclick="copyCardNumber()" title="Bosib nusxalash">
           <svg class="card-icon-svg" viewBox="0 0 24 24">
             <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
             <line x1="1" y1="10" x2="23" y2="10"></line>
@@ -754,13 +766,13 @@
     </div>
 
     <!-- Modal 1 (O'yin haqida) -->
-    <div id="gameModal" class="modal-overlay">
+    <div id="gameModal" class="modal-overlay" onclick="closeCardModalOnOutside(event, 'gameModal')">
       <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
         <div class="modal-logo" id="modalIconContainer">
           <img id="modalIcon" src="" alt="Logo" />
         </div>
-        <h2 class="modal-title" id="modalTitle">O'yin Nomi</h2>
+        <h2 class="modal-title" id="modalTitle" onclick="launchGameFromModal()" title="O'yinni boshlash uchun bosing">O'yin Nomi</h2>
         
         <div class="modal-date" id="modalDate">
           <svg class="modal-date-icon" viewBox="0 0 24 24">
@@ -788,7 +800,7 @@
     </div>
 
     <!-- Modal 2 (O'yin oynasi) -->
-    <div id="gamePlayModal" class="game-modal-overlay">
+    <div id="gamePlayModal" class="game-modal-overlay" onclick="closeCardModalOnOutside(event, 'gamePlayModal')">
       <div class="game-modal-content">
         <div class="game-modal-header">
           <h3 class="game-modal-title" id="gameModalTitle">O'yin</h3>
@@ -888,6 +900,15 @@
         document.getElementById('cardModal').style.display = 'none';
       }
 
+      // Fon qismiga (blur) bosganda oynani yopish funksiyasi
+      function closeCardModalOnOutside(event, modalId) {
+        if (event.target.id === modalId) {
+          if (modalId === 'cardModal') closeCardModal();
+          if (modalId === 'gameModal') closeModal();
+          if (modalId === 'gamePlayModal') closeGamePlayModal();
+        }
+      }
+
       function copyCardNumber() {
         const cardNumber = "9860010127991684";
         navigator.clipboard.writeText(cardNumber).then(() => {
@@ -895,7 +916,7 @@
         });
       }
 
-      document.getElementById('launchBtn').addEventListener('click', function() {
+      function launchGameFromModal() {
         if (!activeGameUrl) {
           alert("Iltimos, o'yin havolasini kiriting!");
           return;
@@ -907,9 +928,12 @@
         document.getElementById('gameModalTitle').textContent = activeGameTitle;
         gameIframe.src = activeGameUrl;
         gamePlayModal.style.display = 'flex';
-      });
+      }
+
+      document.getElementById('launchBtn').addEventListener('click', launchGameFromModal);
 
       renderGames();
     </script>
   </body>
 </html>
+
