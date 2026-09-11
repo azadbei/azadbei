@@ -304,6 +304,12 @@
       .modal-title {
         font-size: 1.3rem;
         margin: 0 0 6px;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .modal-title:hover {
+        color: var(--primary);
       }
 
       .modal-desc {
@@ -348,7 +354,13 @@
         margin: 16px 0;
         text-align: left;
         box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        cursor: pointer;
+        transition: border-color 0.2s;
       }
+      .credit-card:hover {
+        border-color: var(--primary);
+      }
+
       .card-icon-svg {
         width: 32px;
         height: 32px;
@@ -461,18 +473,19 @@
     </footer>
 
     <!-- Karta raqami chiqadigan Modal -->
-    <div id="cardModal" class="modal-overlay">
+    <div id="cardModal" class="modal-overlay" onclick="closeCardModalOnOutside(event, 'cardModal')">
       <div class="modal-content">
         <span class="close-btn" onclick="closeCardModal()">&times;</span>
-        <h2 class="modal-title">
+        <h2 class="modal-title" onclick="copyCardNumber()" title="Bosib nusxalash">
           <svg style="display:inline-block; vertical-align:middle; width:22px; height:22px; stroke:var(--primary); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; margin-right:6px;" viewBox="0 0 24 24">
             <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
             <line x1="1" y1="10" x2="23" y2="10"></line>
           </svg>
           Mening Karta Raqamim
         </h2>
+        <p class="modal-desc">Quyidagi karta raqami orqali qo'llab-quvvatlashingiz mumkin:</p>
         
-        <div class="credit-card">
+        <div class="credit-card" onclick="copyCardNumber()" title="Bosib nusxalash">
           <svg class="card-icon-svg" viewBox="0 0 24 24">
             <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
             <line x1="1" y1="10" x2="23" y2="10"></line>
@@ -499,6 +512,12 @@
 
       function closeCardModal() {
         document.getElementById('cardModal').style.display = 'none';
+      }
+
+      function closeCardModalOnOutside(event, modalId) {
+        if (event.target.id === modalId) {
+          if (modalId === 'cardModal') closeCardModal();
+        }
       }
 
       function copyCardNumber() {
