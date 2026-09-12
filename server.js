@@ -18,7 +18,7 @@ app.use(express.static(__dirname));
 
 // Ko'rishlar sonini olish va oshirish API si
 app.get('/api/visit', (req, res) => {
-  let visits = 1240; // Boshlang'ich baza raqam
+  let visits = 0; // Boshlang'ich baza raqam
   
   if (fs.existsSync(COUNTER_FILE)) {
     try {
