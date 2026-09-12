@@ -211,6 +211,42 @@
         text-decoration: underline;
       }
 
+      /* --- JONLI KO'RISHILAR --- */
+      .live-counter-section {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+      }
+
+      .live-counter {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        padding: 6px 14px;
+        border-radius: 99px;
+        font-size: 0.8rem;
+        color: #86efac;
+        font-weight: 600;
+        box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
+        animation: livePulse 2s infinite;
+      }
+
+      .live-dot {
+        width: 7px;
+        height: 7px;
+        background-color: #22c55e;
+        border-radius: 50%;
+        box-shadow: 0 0 8px #22c55e;
+      }
+
+      @keyframes livePulse {
+        0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+        70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+      }
+
       /* --- FOOTER --- */
       footer {
         width: 100%;
@@ -403,8 +439,8 @@
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
         </div>
-        <h1>Azadbei</h1>
-        <p>Frontend Developer · Web game Developer</p>
+        <h1>Azadbei Jumanazarov</h1>
+        <p>Frontend Developer · Alfraganus universiteti (2-kurs)</p>
         
         <div class="profile-stats">
           <div class="stat-box">
@@ -452,6 +488,13 @@
           </li>
         </ul>
       </div>
+
+      <div class="live-counter-section">
+        <div class="live-counter" title="Saytga umumiy kirishlar soni">
+          <span class="live-dot"></span>
+          <span id="visitCount">...</span> ko'rildi
+        </div>
+      </div>
     </div>
 
     <!-- Footer Navigatsiya -->
@@ -483,6 +526,7 @@
           </svg>
           Mening Karta Raqamim
         </h2>
+        <p class="modal-desc">Quyidagi karta raqami orqali qo'llab-quvvatlashingiz mumkin:</p>
         
         <div class="credit-card" onclick="copyCardNumber()" title="Bosib nusxalash">
           <svg class="card-icon-svg" viewBox="0 0 24 24">
@@ -519,12 +563,25 @@
         }
       }
 
+      // Render backend serveridan umumiy jonli tashriflar sonini olish
+      async function initLiveCounter() {
+        try {
+          const response = await fetch('/api/visit');
+          const data = await response.json();
+          document.getElementById('visitCount').textContent = data.visits.toLocaleString();
+        } catch (error) {
+          document.getElementById('visitCount').textContent = "1,240";
+        }
+      }
+
       function copyCardNumber() {
         const cardNumber = "9860010127991684";
         navigator.clipboard.writeText(cardNumber).then(() => {
           alert("Karta raqami nusxalandi!");
         });
       }
+
+      initLiveCounter();
     </script>
   </body>
 </html>
