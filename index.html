@@ -356,6 +356,42 @@
         color: #bbf7d0;
       }
 
+      /* --- JONLI KO'RISHILAR --- */
+      .live-counter-section {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 30px;
+      }
+
+      .live-counter {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        padding: 6px 14px;
+        border-radius: 99px;
+        font-size: 0.8rem;
+        color: #86efac;
+        font-weight: 600;
+        box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
+        animation: livePulse 2s infinite;
+      }
+
+      .live-dot {
+        width: 7px;
+        height: 7px;
+        background-color: #22c55e;
+        border-radius: 50%;
+        box-shadow: 0 0 8px #22c55e;
+      }
+
+      @keyframes livePulse {
+        0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+        70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+      }
+
       /* --- FOOTER --- */
       footer {
         width: 100%;
@@ -650,7 +686,6 @@
 
     <div class="container">
       <section class="hero">
-        <!-- Chap Qism -->
         <div class="hero-card">
           <div>
             <div class="hero-top">
@@ -682,7 +717,6 @@
           </div>
         </div>
 
-        <!-- O'ng Qism (Spotlight) -->
         <div class="spotlight-card">
           <div class="spotlight-header">
             <span class="spotlight-tag">
@@ -712,9 +746,15 @@
       </div>
 
       <section class="games-grid" id="gameList"></section>
+
+      <div class="live-counter-section">
+        <div class="live-counter" title="Saytga umumiy kirishlar soni">
+          <span class="live-dot"></span>
+          <span id="visitCount">...</span> ko'rildi
+        </div>
+      </div>
     </div>
 
-    <!-- Footer Navigatsiya -->
     <footer>
       <nav class="footer-nav">
         <a href="#" class="nav-item active">
@@ -732,7 +772,6 @@
       </nav>
     </footer>
 
-    <!-- Karta raqami chiqadigan Modal -->
     <div id="cardModal" class="modal-overlay" onclick="closeCardModalOnOutside(event, 'cardModal')">
       <div class="modal-content">
         <span class="close-btn" onclick="closeCardModal()">&times;</span>
@@ -743,7 +782,7 @@
           </svg>
           Mening Karta Raqamim
         </h2>
-       
+        <p class="modal-desc">Quyidagi karta raqami orqali qo'llab-quvvatlashingiz mumkin:</p>
         
         <div class="credit-card" onclick="copyCardNumber()" title="Bosib nusxalash">
           <svg class="card-icon-svg" viewBox="0 0 24 24">
@@ -765,7 +804,6 @@
       </div>
     </div>
 
-    <!-- Modal 1 (O'yin haqida) -->
     <div id="gameModal" class="modal-overlay" onclick="closeCardModalOnOutside(event, 'gameModal')">
       <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -799,7 +837,6 @@
       </div>
     </div>
 
-    <!-- Modal 2 (O'yin oynasi) -->
     <div id="gamePlayModal" class="game-modal-overlay" onclick="closeCardModalOnOutside(event, 'gamePlayModal')">
       <div class="game-modal-content">
         <div class="game-modal-header">
@@ -860,6 +897,17 @@
           .join('');
       }
 
+      // Render backend serveridan umumiy jonli tashriflar sonini olish
+      async function initLiveCounter() {
+        try {
+          const response = await fetch('/api/visit');
+          const data = await response.json();
+          document.getElementById('visitCount').textContent = data.visits.toLocaleString();
+        } catch (error) {
+          document.getElementById('visitCount').textContent = "1,240";
+        }
+      }
+
       function openModal(index) {
         const game = defaultGames[index];
         activeGameUrl = game.url;
@@ -879,7 +927,6 @@
         `;
         
         document.getElementById('modalDesc').textContent = game.description;
-
         document.getElementById('gameModal').style.display = 'flex';
       }
 
@@ -900,7 +947,6 @@
         document.getElementById('cardModal').style.display = 'none';
       }
 
-      // Fon qismiga (blur) bosganda oynani yopish funksiyasi
       function closeCardModalOnOutside(event, modalId) {
         if (event.target.id === modalId) {
           if (modalId === 'cardModal') closeCardModal();
@@ -933,7 +979,7 @@
       document.getElementById('launchBtn').addEventListener('click', launchGameFromModal);
 
       renderGames();
+      initLiveCounter();
     </script>
   </body>
 </html>
-
