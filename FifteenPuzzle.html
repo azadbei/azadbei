@@ -84,7 +84,7 @@
     }
 
     /* ====================================================
-       3. STATISTIKA VA O'YIN MAYDONI (GRID)
+       3. STATISTIKA VA O'YIN MAYDONI (BOARD)
     ==================================================== */
     .stats {
       display: flex;
@@ -102,24 +102,23 @@
     .board {
       width: min(88vw, 380px);
       height: min(88vw, 380px);
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: repeat(4, 1fr);
-      gap: 8px;
-      padding: 10px;
       background:
         repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.15) 0 2px, transparent 2px 6px),
         #14120f;
       border-radius: 8px;
       box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 0, 0, 0.5);
       position: relative;
+      overflow: hidden;
+      padding: 10px;
     }
 
     /* ====================================================
-       4. PUZZLE TOSHLARI (TILES) DIZAYNI
+       4. PUZZLE TOSHLARI (TILES) DIZAYNI VA ANIMATSIYASI
     ==================================================== */
     .tile {
-      position: relative;
+      position: absolute;
+      width: calc((100% - 20px) / 4);
+      height: calc((100% - 20px) / 4);
       border-radius: 5px;
       background: linear-gradient(155deg, var(--paper) 0%, var(--paper-dim) 100%);
       color: var(--ink);
@@ -135,8 +134,8 @@
         0 3px 0 rgba(0, 0, 0, 0.35),
         0 6px 10px rgba(0, 0, 0, 0.35),
         inset 0 0 0 1px rgba(0, 0, 0, 0.08);
-      transition: transform 0.12s ease, box-shadow 0.12s ease;
-      transform-origin: center;
+      /* Toshlar siljishi uchun silliq transition */
+      transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.12s ease;
     }
 
     .tile::before {
@@ -149,7 +148,6 @@
     }
 
     .tile:hover {
-      transform: translateY(-2px);
       box-shadow:
         0 5px 0 rgba(0, 0, 0, 0.35),
         0 10px 16px rgba(0, 0, 0, 0.4),
@@ -157,17 +155,11 @@
     }
 
     .tile:active {
-      transform: translateY(1px) scale(0.98);
+      transform: scale(0.98);
     }
 
     .tile.empty {
-      background: transparent;
-      box-shadow: none;
-      cursor: default;
-      pointer-events: none;
-    }
-    .tile.empty::before {
-      display: none;
+      display: none; /* Bo'sh joyni ko'rsatmaymiz, chunki koordinatalar orqali boshqaramiz */
     }
 
     /* ====================================================
@@ -187,7 +179,7 @@
       text-transform: uppercase;
       padding: 11px 20px;
       border-radius: 5px;
-      border: 1px solid rgba(233, 224, 204, 0.15);
+      border: 1px and rgba(233, 224, 204, 0.15);
       background: rgba(233, 224, 204, 0.04);
       color: var(--paper);
       cursor: pointer;
@@ -288,7 +280,7 @@
       let timerInterval = null;
       let running = false;
       let solvedOnce = false;
-      let tileEls = [];
+      let tileElements = {};
 
       function solvedState() {
         const arr = [];
@@ -302,10 +294,6 @@
           if (arr[i] !== i + 1) return false;
         }
         return arr[15] === 0;
-      }
-
-      function indexToRC(i) {
-        return [Math.floor(i / SIZE), i % SIZE];
       }
 
       function isSolvable(arr) {
@@ -338,28 +326,31 @@
 
       function buildBoard() {
         boardEl.querySelectorAll('.tile').forEach(t => t.remove());
-        tileEls = [];
-        
-        tiles.forEach((val, i) => {
+        tileElements = {};
+
+        for (let val = 1; val <= 15; val++) {
           const div = document.createElement('div');
-          div.className = 'tile' + (val === 0 ? ' empty' : '');
-          div.textContent = val === 0 ? '' : val;
-          div.dataset.index = i;
-          
-          if (val !== 0) {
-            div.addEventListener('click', () => attemptMove(i));
-          }
-          
+          div.className = 'tile';
+          div.textContent = val;
+          div.addEventListener('click', () => {
+            const currentIndex = tiles.indexOf(val);
+            attemptMove(currentIndex);
+          });
           boardEl.appendChild(div);
-          tileEls.push(div);
-        });
+          tileElements[val] = div;
+        }
+        updatePositions(false);
       }
 
-      function render() {
-        tiles.forEach((val, i) => {
-          const el = tileEls[i];
-          el.textContent = val === 0 ? '' : val;
-          el.className = 'tile' + (val === 0 ? ' empty' : '');
+      function updatePositions(animate = true) {
+        tiles.forEach((val, index) => {
+          if (val === 0) return;
+          const el = tileElements[val];
+          const row = Math.floor(index / SIZE);
+          const col = index % SIZE;
+          
+          // Har bir toshning qayerga siljishini hisoblab `transform` beramiz
+          el.style.transform = `translate(calc(${col} * (100% + 8px)), calc(${row} * (100% + 8px)))`;
         });
       }
 
@@ -367,8 +358,10 @@
         if (!running && solvedOnce) return;
         
         const emptyIndex = tiles.indexOf(0);
-        const [er, ec] = indexToRC(emptyIndex);
-        const [tr, tc] = indexToRC(i);
+        const er = Math.floor(emptyIndex / SIZE);
+        const ec = emptyIndex % SIZE;
+        const tr = Math.floor(i / SIZE);
+        const tc = i % SIZE;
         
         const adjacent = (Math.abs(er - tr) + Math.abs(ec - tc)) === 1;
         if (!adjacent) return;
@@ -380,7 +373,8 @@
         [tiles[emptyIndex], tiles[i]] = [tiles[i], tiles[emptyIndex]];
         moves++;
         movesEl.textContent = moves;
-        render();
+        
+        updatePositions(true);
 
         if (isSolved(tiles)) {
           finishGame();
@@ -425,7 +419,7 @@
         winBanner.classList.remove('show');
         
         tiles = shuffle(solvedState());
-        buildBoard();
+        updatePositions(false);
       }
 
       shuffleBtn.addEventListener('click', newGame);
@@ -434,20 +428,18 @@
       document.addEventListener('keydown', (e) => {
         if (solvedOnce) return;
         const emptyIndex = tiles.indexOf(0);
-        const [er, ec] = indexToRC(emptyIndex);
-        let target = null;
+        const er = Math.floor(emptyIndex / SIZE);
+        const ec = emptyIndex % SIZE;
+        let targetRow = er, targetCol = ec;
         
-        if (e.key === 'ArrowUp') { target = [er + 1, ec]; }
-        else if (e.key === 'ArrowDown') { target = [er - 1, ec]; }
-        else if (e.key === 'ArrowLeft') { target = [er, ec + 1]; }
-        else if (e.key === 'ArrowRight') { target = [er, ec - 1]; }
+        if (e.key === 'ArrowUp') targetRow = er + 1;
+        else if (e.key === 'ArrowDown') targetRow = er - 1;
+        else if (e.key === 'ArrowLeft') targetCol = ec + 1;
+        else if (e.key === 'ArrowRight') targetCol = ec - 1;
         
-        if (target) {
-          const [tr, tc] = target;
-          if (tr >= 0 && tr < SIZE && tc >= 0 && tc < SIZE) {
-            attemptMove(tr * SIZE + tc);
-            e.preventDefault();
-          }
+        if (targetRow >= 0 && targetRow < SIZE && targetCol >= 0 && targetCol < SIZE) {
+          attemptMove(targetRow * SIZE + targetCol);
+          e.preventDefault();
         }
       });
 
@@ -457,3 +449,4 @@
   </script>
 </body>
 </html>
+
