@@ -898,8 +898,9 @@
 
       // Render backend serveridan umumiy jonli tashriflar sonini olish
       async function initLiveCounter() {
-        try {
-          const response = await fetch('/api/visit');
+  try {
+    const response = await fetch('https://azadbei.onrender.com/api/visit');
+
           const data = await response.json();
           document.getElementById('visitCount').textContent = data.visits.toLocaleString();
         } catch (error) {
